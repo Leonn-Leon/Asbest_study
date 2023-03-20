@@ -1,12 +1,23 @@
 import matplotlib.pyplot
 from fastai.vision.all import *
 import os
+import sys
 import warnings
 import numpy as np
 warnings.filterwarnings("ignore")
 from sklearn.model_selection import KFold
 import segmentation_models_pytorch as smp
 
+#####
+# nohup python3.9 train_model.py Unet++_xcep xception > output/Unet++_xcep.out &
+#####
+
+save_fname = sys.argv[1]
+enc_name = sys.argv[2]
+print(f'Models will save to {save_fname}_x')
+print(f'Use {enc_name} encoder')
+
+##################
 os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 kf = KFold(n_splits=5, shuffle=True)
@@ -57,7 +68,7 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
                                     path=data_path,
                                     bs = 30)
     model = smp.UnetPlusPlus(
-        encoder_name = "densenet161", 
+        encoder_name = enc_name, 
         encoder_weights = None,    
         in_channels = 3,    
         activation = 'sigmoid',       
@@ -72,11 +83,13 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
                          smp.losses.LovaszLoss(mode='binary'),
                          smp.losses.MCCLoss()
                         ],
-                cbs = [EarlyStoppingCallback(patience=4),
-                       SaveModelCallback(monitor='valid_loss', fname = 'Unet++_dense161_'+str(ind)),
+                cbs = [EarlyStoppingCallback(patience=8),
+                       SaveModelCallback(monitor='valid_loss', fname = save_fname+'_'+str(ind)),
                         ])
     with learn.no_bar():
-        learn.fit(50)
+        learn.fit(90)
+        
+    np.save('losses/'+save_fname+'_'+str(ind)+'.npy', np.array(learn.recorder.losses))
     
     torch.cuda.empty_cache()
     
