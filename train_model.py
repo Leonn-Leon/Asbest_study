@@ -9,7 +9,7 @@ from sklearn.model_selection import KFold
 import segmentation_models_pytorch as smp
 
 #####
-# nohup python3.9 train_model.py Unet++_xcep xception > output/Unet++_xcep.out &
+# nohup python3.9 train_model.py MAnet_effb7 efficientnet-b7 > output/MAnet_effb7.out &
 #####
 
 save_fname = sys.argv[1]
@@ -67,7 +67,7 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
                                     get_image_files(data_path/'images'),
                                     path=data_path,
                                     bs = 30)
-    model = smp.UnetPlusPlus(
+    model = smp.MAnet(
         encoder_name = enc_name, 
         encoder_weights = None,    
         in_channels = 3,    
@@ -95,4 +95,4 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
     
     ind += 1
 
-print('UnetPlusPlus Done!')
+print('MAnet Done!')
