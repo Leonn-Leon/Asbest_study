@@ -9,7 +9,7 @@ from sklearn.model_selection import KFold
 import segmentation_models_pytorch as smp
 
 #####
-# nohup python3.9 train_model_2.py MAnet_dpn131 dpn131 > output/MAnet_dpn131.out &
+# nohup python3.9 train_model_2.py DLV3_res152 resnet152 > output/DLV3_res152.out &
 #####
 
 save_fname = sys.argv[1]
@@ -67,7 +67,7 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
                                     get_image_files(data_path/'images'),
                                     path=data_path,
                                     bs = 30)
-    model = smp.MAnet(
+    model = smp.DeepLabV3(
         encoder_name = enc_name, 
         encoder_weights = None,    
         in_channels = 3,    
@@ -95,4 +95,4 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
     
     ind += 1
 
-print('MAnet Done!')
+print('DeepLabV3 Done!')
