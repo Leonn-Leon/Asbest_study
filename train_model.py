@@ -9,7 +9,7 @@ from sklearn.model_selection import KFold
 import segmentation_models_pytorch as smp
 
 #####
-# nohup python3.9 train_model.py DLV3_effb7 efficientnet-b7 > output/DLV3_effb7.out &
+# nohup python3.9 train_model.py Unet_mobs4 mobileone_s4 > output/Unet_mobs4.out &
 #####
 
 save_fname = sys.argv[1]
@@ -18,7 +18,7 @@ print(f'Models will save to {save_fname}_x')
 print(f'Use {enc_name} encoder')
 
 ##################
-os.environ["CUDA_VISIBLE_DEVICES"]="3"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 kf = KFold(n_splits=5, shuffle=True)
 
@@ -66,8 +66,8 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
     dls = SegmentationDataLoaders.from_dblock(dblock,
                                     get_image_files(data_path/'images'),
                                     path=data_path,
-                                    bs = 10)
-    model = smp.DeepLabV3(
+                                    bs = 50)
+    model = smp.Unet(
         encoder_name = enc_name, 
         encoder_weights = None,    
         in_channels = 3,    
@@ -95,4 +95,4 @@ for train_idx, val_idx in kf.split(get_image_files(data_path/'images')):
     
     ind += 1
 
-print('DeepLabV3 Done!')
+print('Unet Done!')
