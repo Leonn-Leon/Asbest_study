@@ -1,0 +1,12 @@
+Models will save to Linknet_mitb5_x
+Use mit_b5 encoder
+Start training...
+----------
+0
+----------
+Traceback (most recent call last):
+  File "/home/vskovoroda/Stones/train_model.py", line 176, in <module>
+    model = smp.Linknet(
+  File "/home/vskovoroda/miniconda3/envs/tf-gpu/lib/python3.9/site-packages/segmentation_models_pytorch/decoders/linknet/model.py", line 68, in __init__
+    raise ValueError("Encoder `{}` is not supported for Linknet".format(encoder_name))
+ValueError: Encoder `mit_b5` is not supported for Linknet
